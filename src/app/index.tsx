@@ -1,6 +1,6 @@
 import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
 import { Link } from "expo-router";
-import { Pressable, ScrollView, StyleSheet } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/themed-text";
@@ -12,6 +12,118 @@ import { useTheme } from "@/hooks/use-theme";
 import Feather from "@react-native-vector-icons/feather";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import Lucide from "@react-native-vector-icons/lucide";
+import { useState } from "react";
+
+const faqs = [
+  {
+    title: "What is BlinkMoney?",
+    description:
+      "BlinkMoney gives you instant access to up to ₹1 Crore,  without selling your mutual funds. You can access cash when you need it, while your investments keep growing ,  all through an easy digital process.",
+  },
+  {
+    title: "Who is eligible for BlinkMoney?",
+    description:
+      "To unlock BlinkMoney's potential, you should be a Resident Indian individual between 18 and 65 years of age, with a mutual fund portfolio of ₹20,000 or more. We believe in empowering responsible financial access.",
+  },
+  {
+    title: "What mutual funds are eligible?",
+    description:
+      "BlinkMoney deals in Mutual funds that perform, more than 6000 mutual fund schemes. We work with CAMS & KFintech approved funds. Some have limitations, such as fixed tenure MF; we'll tell you what's what. You focus on the win. Additionally, your investments in MF through your demat account are also not eligible.",
+  },
+  {
+    title: "What documents are required to apply?",
+    description:
+      "BlinkMoney is 100% digital and paperless. Have your PAN, CAMS/KFintech linked email, bank details, and net banking access ready. We're efficient; you should be too.",
+  },
+  {
+    title: "How much can I borrow?",
+    description:
+      "BlinkMoney gives you access to credit lines of up to ₹1 crore ,  without selling your investments. Unlock up to 50% of your equity/ hybrid funds and 90% of your debt funds, so the wealth you've built keeps working for you while powering what's next.",
+  },
+  {
+    title: "What are the interest rates?",
+    description:
+      "Staring at 9.99% pa, BlinkMoney is committed to providing competitive and transparent pricing. Our interest rates are tailored to your unique financial profile. You'll receive clear details on your applicable rate upfront.",
+  },
+  {
+    title: "Do I have to pay interest on the entire credit line?",
+    description:
+      "You pay for what you use. Not a penny more. Unused credit remains cost-free. That's how smart money works.",
+  },
+  {
+    title: "What is lien marking/pledging of mutual funds?",
+    description:
+      "Lien marking/pledging is the process of using your mutual fund investments as collateral for the loan. It's digital, it's standard, and you still own your mutual funds just can't sell them until the loan is repaid.",
+  },
+  {
+    title: "Can I still get returns on my pledged investments?",
+    description:
+      "Absolutely! BlinkMoney ensures your investments work for you. You continue to earn returns on your pledged mutual funds, capturing market upside while accessing liquidity.",
+  },
+  {
+    title: "Do I have to pay EMIs?",
+    description:
+      "With BlinkMoney, you pay monthly interest on the amount you withdraw , not on your full credit line. The principal can be repaid anytime, in parts or in full, giving you complete control over cash flow.",
+  },
+];
+
+function FAQSection() {
+  const theme = useTheme();
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  return (
+    <ThemedView style={styles.faqSection}>
+      <ThemedText style={styles.sectionTitle} themeColor="faqTitle">
+        FAQs
+      </ThemedText>
+      <ThemedView
+        style={[styles.faqList, { backgroundColor: theme.backgroundElement }]}
+      >
+        {faqs.map((question, index) => {
+          const isOpen = openIndex === index;
+          return (
+            <View key={question.title}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ expanded: isOpen }}
+                onPress={() => setOpenIndex(isOpen ? null : index)}
+                style={({ pressed }) => [
+                  styles.faqRow,
+                  pressed && styles.cardPressed,
+                ]}
+              >
+                <ThemedText themeColor="faqTitle" style={[styles.faqQuestion]}>
+                  {question.title}
+                </ThemedText>
+                <Lucide
+                  name={isOpen ? "chevron-up" : "chevron-down"}
+                  size={20}
+                  color={theme.text}
+                />
+              </Pressable>
+              {isOpen && (
+                <ThemedText
+                  themeColor="faqDescription"
+                  style={[styles.faqAnswer]}
+                >
+                  {question.description}
+                </ThemedText>
+              )}
+              {index < faqs.length - 1 && (
+                <View
+                  style={[
+                    styles.faqDivider,
+                    { backgroundColor: theme.backgroundSelected },
+                  ]}
+                />
+              )}
+            </View>
+          );
+        })}
+      </ThemedView>
+    </ThemedView>
+  );
+}
 
 function Card({
   title,
@@ -64,8 +176,13 @@ function Card({
             { backgroundColor: theme.backgroundElement },
           ]}
         >
-          <ThemedText style={styles.cardTitle}>{title}</ThemedText>
-          <ThemedText style={styles.cardDescription} themeColor="textSecondary">
+          <ThemedText style={styles.cardTitle} themeColor="faqTitle">
+            {title}
+          </ThemedText>
+          <ThemedText
+            style={styles.cardDescription}
+            themeColor="faqDescription"
+          >
             {description}
           </ThemedText>
         </ThemedView>
@@ -220,6 +337,7 @@ export default function HomeScreen() {
               ))}
             </ThemedView>
           </ThemedView>
+          <FAQSection />
           <Footer />
         </ScrollView>
       </SafeAreaView>
@@ -243,6 +361,25 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
     paddingBottom: BottomTabInset + Spacing.three,
   },
+  faqSection: { gap: Spacing.two },
+  faqList: { overflow: "hidden", borderRadius: 16 },
+  faqRow: {
+    minHeight: 48,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.one,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: Spacing.two,
+  },
+  faqQuestion: { flex: 1, fontSize: 12, lineHeight: 20, fontWeight: "400" },
+  faqAnswer: {
+    paddingHorizontal: Spacing.three,
+    paddingBottom: Spacing.three,
+    fontSize: 11,
+    lineHeight: 19,
+  },
+  faqDivider: { height: 1, width: "100%" },
   heroSection: {
     alignItems: "center",
     justifyContent: "center",
