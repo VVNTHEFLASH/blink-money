@@ -3,6 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
+    "@expo-google-fonts/mulish": "^0.4.2",
     "@expo/ui": "~57.0.10",
     "@react-native-vector-icons/feather": "^13.1.2",
     "@react-native-vector-icons/fontawesome6": "^13.1.2",

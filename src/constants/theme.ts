@@ -20,6 +20,9 @@ export const Colors = {
     primaryInk: "#dfffd0",
     iconColor: "#000",
     iconBorderColor: "#e5e7eb",
+    transparent: "transparent",
+    surface: "#f3f5f1",
+    textFaint: "#94A3B8",
   },
   dark: {
     text: "#ffffff",
@@ -33,8 +36,9 @@ export const Colors = {
     primaryInk: "#0B0F0A",
     iconColor: "#fff",
     iconBorderColor: "#263021",
-
-    // #7F8B78
+    transparent: "transparent",
+    surface: "#141B13",
+    textFaint: "#7F8B78",
   },
 } as const;
 
