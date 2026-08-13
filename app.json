@@ -32,7 +32,11 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
-      ]
+      ],
+      "@react-native-vector-icons/feather",
+      "@react-native-vector-icons/fontawesome6",
+      "@react-native-vector-icons/simple-line-icons",
+      "@react-native-vector-icons/material-icons"
     ],
     "experiments": {
       "typedRoutes": true,
