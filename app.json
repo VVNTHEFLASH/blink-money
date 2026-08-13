@@ -4,11 +4,11 @@
     "slug": "blink-money",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/splash-icon.webp",
     "scheme": "blinkmoney",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/favicon.icon"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,9 +28,12 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#fff",
+          "image": "./assets/images/splash-icon_expo.png",
+          "imageWidth": 76,
+          "dark": {
+            "backgroundColor": "#000"
+          }
         }
       ],
       "@react-native-vector-icons/feather",

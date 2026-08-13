@@ -8,6 +8,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Footer from "@/components/ui/Footer";
 import Header from "@/components/ui/header";
+import ImageCarousel from "@/components/ui/NativeCarousel";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 import Feather from "@react-native-vector-icons/feather";
@@ -324,6 +325,7 @@ export default function HomeScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
+          <ImageCarousel />
           <ThemedView>
             <ThemedText style={styles.sectionTitle}>Features</ThemedText>
             <ThemedView style={styles.gridContainer}>
