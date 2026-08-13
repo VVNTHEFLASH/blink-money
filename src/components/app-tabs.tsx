@@ -12,6 +12,7 @@ import { Pressable, StyleSheet, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Colors } from "@/constants/theme";
+import { useColorScheme } from "@/hooks/use-color-scheme";
 
 const tabs = [
   { name: "home", label: "Home", icon: "home" },
@@ -22,6 +23,7 @@ const tabs = [
 
 export default function AppTabs() {
   const insets = useSafeAreaInsets();
+  const scheme = useColorScheme();
   return (
     <Tabs>
       <TabSlot style={styles.slot} />
@@ -30,6 +32,8 @@ export default function AppTabs() {
           styles.outer,
           {
             bottom: Math.max(insets.bottom, 8) + 10,
+            backgroundColor:
+              scheme === "dark" ? "rgba(11, 15, 10, 0.92)" : "#FFF",
           },
         ]}
       >
@@ -119,7 +123,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#9FE870",
     borderRadius: 34,
-    backgroundColor: "rgba(11, 15, 10, 0.92)",
   },
   tab: {
     flex: 1,

@@ -17,8 +17,9 @@ export const Colors = {
     faqTitle: "#262729",
     faqDescription: "#687076",
     accent: "#9FE870",
-    primaryInk: "#1E4A00",
+    primaryInk: "#dfffd0",
     iconColor: "#000",
+    iconBorderColor: "#e5e7eb",
   },
   dark: {
     text: "#ffffff",
@@ -31,6 +32,8 @@ export const Colors = {
     accent: "#9FE870",
     primaryInk: "#0B0F0A",
     iconColor: "#fff",
+    iconBorderColor: "#263021",
+
     // #7F8B78
   },
 } as const;

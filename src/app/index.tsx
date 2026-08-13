@@ -1,8 +1,9 @@
 import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
 import { Link } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { ThemedScrollView } from "@/components/themed-scrollview";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Footer from "@/components/ui/Footer";
@@ -157,11 +158,12 @@ function Card({
               ? {
                   width: 48,
                   height: 48,
+                  borderColor: iconBackground,
                 }
               : {
                   width: 40,
                   height: 40,
-                  borderColor: "#3A5C42",
+                  borderColor: theme.iconBorderColor,
                 },
             {
               backgroundColor: iconBackground,
@@ -316,8 +318,9 @@ export default function HomeScreen() {
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <Header />
-        <ScrollView
-          style={[styles.scrollView, { backgroundColor: theme.background }]}
+        <ThemedScrollView
+          type="background"
+          style={[styles.scrollView]}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
@@ -339,7 +342,7 @@ export default function HomeScreen() {
           </ThemedView>
           <FAQSection />
           <Footer />
-        </ScrollView>
+        </ThemedScrollView>
       </SafeAreaView>
     </ThemedView>
   );
@@ -377,7 +380,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.three,
     paddingBottom: Spacing.three,
     fontSize: 11,
-    lineHeight: 19,
+    lineHeight: 14,
   },
   faqDivider: { height: 1, width: "100%" },
   heroSection: {

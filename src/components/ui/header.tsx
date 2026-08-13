@@ -1,6 +1,16 @@
 import { FontAwesome6 } from "@react-native-vector-icons/fontawesome6";
-import { SimpleLineIcons } from "@react-native-vector-icons/simple-line-icons";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import SimpleLineIconsLib, {
+  SimpleLineIcons,
+} from "@react-native-vector-icons/simple-line-icons";
+import type { ComponentProps } from "react";
+import {
+  Alert,
+  Linking,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import { useTheme } from "@/hooks/use-theme";
 
@@ -11,12 +21,38 @@ const Header = ({
   onHelpPress = undefined,
   showHelp = true,
   avatarIcon = "user",
+}: {
+  name?: string;
+  greeting?: string;
+  subtitle?: string;
+  onHelpPress?: () => void;
+  showHelp?: boolean;
+  avatarIcon?: ComponentProps<typeof SimpleLineIconsLib>["name"];
 }) => {
   const theme = useTheme();
   const helpColor = theme.primaryInk;
-  const handleHelpPress =
-    onHelpPress ??
-    (() => Alert.alert("Help pressed", "Whatsapp help to be navigated"));
+
+  const openWhatsApp = async () => {
+    // The exact target WhatsApp API link
+    const url =
+      "https://api.whatsapp.com/send/?phone=919004311470&text=Hi%20BlinkMoney%20Support!%0AI%20need%20help&type=phone_number&app_absent=0";
+
+    try {
+      // 1. Verify if the device is capable of handling the URL schema
+      const supported = await Linking.canOpenURL(url);
+
+      if (supported) {
+        // 2. Fire the deep-link redirection
+        await Linking.openURL(url);
+      } else {
+        Alert.alert("Error", "WhatsApp is not installed on this device");
+      }
+    } catch (error) {
+      Alert.alert("Error", "An error occurred while trying to open WhatsApp");
+    }
+  };
+
+  const handleHelpPress = onHelpPress ?? (() => openWhatsApp());
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
