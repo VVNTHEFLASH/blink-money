@@ -11,21 +11,22 @@ export const Colors = {
   light: {
     text: "#000000",
     background: "#ffffff",
-    backgroundElement: "#F0F0F3",
+    backgroundElement: "#e7ebe3",
     backgroundSelected: "#E0E1E6",
     textSecondary: "#60646C",
     accent: "#9FE870",
     primaryInk: "#1E4A00",
+    iconColor: "#000",
   },
   dark: {
     text: "#ffffff",
-    // background: "#000000",
     background: "rgb(10, 15, 10)",
-    backgroundElement: "rgb(20,27,19)",
+    backgroundElement: "#1b2418",
     backgroundSelected: "#2E3135",
     textSecondary: "#B0B4BA",
     accent: "#9FE870",
     primaryInk: "#0B0F0A",
+    iconColor: "#fff",
     // #7F8B78
   },
 } as const;

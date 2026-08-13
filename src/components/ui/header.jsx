@@ -99,13 +99,13 @@ const styles = StyleSheet.create({
   copy: { minWidth: 0, flexShrink: 1 },
   greeting: {
     fontFamily: "Mulish-Medium",
-    fontSize: 15,
+    fontSize: 12,
     lineHeight: 18,
     fontWeight: "500",
   },
   subtitle: {
     fontFamily: "Mulish-Regular",
-    fontSize: 13,
+    fontSize: 11,
     lineHeight: 16,
     fontWeight: "400",
   },

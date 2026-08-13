@@ -1,4 +1,5 @@
 import { ThemedView } from "@/components/themed-view";
+import Footer from "@/components/ui/Footer";
 import Header from "@/components/ui/header";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import { StyleSheet } from "react-native";
@@ -8,6 +9,7 @@ export default function RewardsScreen() {
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <Header />
+        <Footer />
       </SafeAreaView>
     </ThemedView>
   );
