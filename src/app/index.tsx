@@ -316,7 +316,7 @@ export default function HomeScreen() {
   const theme = useTheme();
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={styles.container} type="background">
       <SafeAreaView style={styles.safeArea}>
         <Header />
         <ThemedScrollView

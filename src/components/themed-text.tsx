@@ -73,6 +73,8 @@ const styles = StyleSheet.create({
     fontFamily: "Mulish-Regular",
     lineHeight: 30,
     fontSize: 14,
+    color: "#9FE870",
+    textDecorationLine: "underline",
   },
   linkPrimary: {
     fontFamily: "Mulish-SemiBold",
