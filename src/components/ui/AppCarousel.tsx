@@ -1,17 +1,17 @@
 import React, { useCallback, useRef } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
-import {
-  Carousel,
-  type CarouselRef,
-  type CarouselRenderItemInfo,
-} from "react-native-reanimated-carousel";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import type { SharedValue } from "react-native-reanimated";
 import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import type { SharedValue } from "react-native-reanimated";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  Carousel,
+  type CarouselRef,
+  type CarouselRenderItemInfo,
+} from "react-native-reanimated-carousel";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -69,7 +69,12 @@ function PaginationDot({
     // We achieve this by rendering two overlapping dots and cross-fading opacity
     const activeOpacity = interpolate(distance, [0, 1], [1, 0], "clamp");
 
-    return { width, opacity, backgroundColor: distance < 0.5 ? activeColor : inactiveColor, activeOpacity };
+    return {
+      width,
+      opacity,
+      backgroundColor: distance < 0.5 ? activeColor : inactiveColor,
+      activeOpacity,
+    };
   });
 
   return <Animated.View style={[styles.dot, animatedStyle]} />;
@@ -131,7 +136,7 @@ export function AppCarousel<T>({
   // This prevents leaking react-native-reanimated-carousel internals to consumers
   const internalRenderItem = useCallback(
     ({ item, index }: CarouselRenderItemInfo<T>) => renderItem(item, index),
-    [renderItem]
+    [renderItem],
   );
 
   return (

@@ -1,7 +1,4 @@
 import { FontAwesome6 } from "@react-native-vector-icons/fontawesome6";
-import SimpleLineIconsLib, {
-  SimpleLineIcons,
-} from "@react-native-vector-icons/simple-line-icons";
 import type { ComponentProps } from "react";
 import {
   Alert,
@@ -13,6 +10,7 @@ import {
 } from "react-native";
 
 import { useTheme } from "@/hooks/use-theme";
+import Lucide from "@react-native-vector-icons/lucide";
 
 const Header = ({
   name = "VISHNUVARDHAN",
@@ -27,7 +25,7 @@ const Header = ({
   subtitle?: string;
   onHelpPress?: () => void;
   showHelp?: boolean;
-  avatarIcon?: ComponentProps<typeof SimpleLineIconsLib>["name"];
+  avatarIcon?: ComponentProps<typeof Lucide>["name"];
 }) => {
   const theme = useTheme();
   const helpColor = theme.primaryInk;
@@ -59,7 +57,7 @@ const Header = ({
       <View style={styles.identity}>
         <View style={[styles.avatar, { backgroundColor: theme.accent }]}>
           <View style={[styles.avatarInner, { borderColor: helpColor }]}>
-            <SimpleLineIcons name={avatarIcon} size={18} color={helpColor} />
+            <Lucide name={avatarIcon} size={18} color={helpColor} />
           </View>
         </View>
         <View style={styles.copy}>
@@ -128,7 +126,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 18,
-    borderWidth: 2,
+    borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
   },

@@ -1,5 +1,5 @@
 import { ThemedView } from "@/components/themed-view";
-import Footer from "@/components/ui/Footer";
+import Footer from "@/components/ui/footer";
 import Header from "@/components/ui/header";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import { StyleSheet } from "react-native";

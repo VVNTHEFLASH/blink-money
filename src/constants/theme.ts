@@ -23,10 +23,11 @@ export const Colors = {
     transparent: "transparent",
     surface: "#f3f5f1",
     textFaint: "#94A3B8",
+    shadowColor: "transparent",
   },
   dark: {
     text: "#ffffff",
-    background: "rgb(10, 15, 10)",
+    background: "#0a0f0a",
     backgroundElement: "#1b2418",
     backgroundSelected: "#2E3135",
     textSecondary: "#B0B4BA",
@@ -39,6 +40,7 @@ export const Colors = {
     transparent: "transparent",
     surface: "#141B13",
     textFaint: "#7F8B78",
+    shadowColor: "transparent",
   },
 } as const;
 
