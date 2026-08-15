@@ -25,13 +25,13 @@ export default function AppTabs() {
   const insets = useSafeAreaInsets();
   const scheme = useColorScheme();
   return (
-    <Tabs>
+    <Tabs style={{ flex: 1 }}>
       <TabSlot style={styles.slot} />
       <TabList
         style={[
           styles.outer,
           {
-            bottom: Math.max(insets.bottom, 8) + 10,
+            marginBottom: Math.max(insets.bottom, 8) + 10,
             backgroundColor:
               scheme === "dark" ? "rgba(11, 15, 10, 0.92)" : "#FFF",
           },
@@ -110,12 +110,10 @@ function TabButton({
 const styles = StyleSheet.create({
   slot: { flex: 1 },
   outer: {
-    position: "absolute",
-    bottom: 10,
-    left: 24,
-    right: 24,
+    marginHorizontal: 24,
     maxWidth: 768,
     alignSelf: "center",
+    width: "100%",
     padding: 4,
     height: 62,
     alignItems: "stretch",

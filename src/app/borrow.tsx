@@ -151,7 +151,7 @@ export default function BorrowScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, flexDirection: "row" },
+  container: { flex: 1, flexDirection: "row", justifyContent: "center" },
   safeArea: {
     flex: 1,
     paddingHorizontal: Spacing.four,
