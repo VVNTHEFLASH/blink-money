@@ -767,7 +767,7 @@ const sip = () => {
   };
 
   const handleBackPress = () => {
-    router.back();
+    router.replace("/(tabs)");
   };
   return (
     <ThemedView style={styles.container} type="background">

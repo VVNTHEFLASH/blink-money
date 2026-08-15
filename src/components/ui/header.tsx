@@ -3,12 +3,13 @@ import type { ComponentProps } from "react";
 import { Alert, Linking, Pressable, StyleSheet } from "react-native";
 
 import { useTheme } from "@/hooks/use-theme";
+import { useAppSelector } from "@/store/hooks";
 import Lucide from "@react-native-vector-icons/lucide";
 import { ThemedText } from "../themed-text";
 import { ThemedView } from "../themed-view";
 
 const Header = ({
-  name = "VISHNUVARDHAN",
+  name,
   greeting = "Hello",
   subtitle = "Welcome!",
   onHelpPress = undefined,
@@ -25,6 +26,7 @@ const Header = ({
   onBackPress?: () => void;
 }) => {
   const theme = useTheme();
+  const userName = useAppSelector((state) => state.user.currentUser.name);
   const helpColor = theme.primaryInk;
 
   const openWhatsApp = async () => {
@@ -53,6 +55,7 @@ const Header = ({
     return (
       <Pressable onPress={onBackPress}>
         <ThemedView
+          type="surface"
           style={{
             width: 32,
             height: 32,
@@ -89,7 +92,7 @@ const Header = ({
               ellipsizeMode="tail"
               style={[styles.greeting, { color: theme.text }]}
             >
-              {greeting} {name}
+              {greeting} {name ?? userName}
             </ThemedText>
             <ThemedText
               style={[styles.subtitle, { color: theme.textSecondary }]}

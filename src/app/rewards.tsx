@@ -74,7 +74,7 @@ const REWARDS_TIERS_DATA = [
 export default function RewardsScreen() {
   const theme = useTheme();
   const router = useRouter();
-  const [activeTierIndex, setActiveTierIndex] = useState(2);
+  const [activeTierIndex, setActiveTierIndex] = useState(3);
   const tier = REWARDS_TIERS_DATA[activeTierIndex];
 
   const icon = (

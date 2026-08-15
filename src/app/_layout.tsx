@@ -12,6 +12,9 @@ import {
 } from "@expo-google-fonts/mulish";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import { Provider } from "react-redux";
+
+import { store } from "@/store";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,11 +32,13 @@ export default function TabLayout() {
     return null;
   }
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" />
-      </Stack>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <AnimatedSplashOverlay />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" />
+        </Stack>
+      </ThemeProvider>
+    </Provider>
   );
 }
