@@ -79,12 +79,18 @@ export default function SipDetailsScreen() {
   const router = useRouter();
   const { invoiceId } = useLocalSearchParams<{ invoiceId: string }>();
   const { investmentOrders, holdings } = useAppSelector((state) => state.save);
+  const blinkCoinBalance = useAppSelector((state) => state.rewards.blinkCoins);
 
   const invoiceData = useMemo(() => {
     return [...investmentOrders, ...holdings].find((item) => item.id === invoiceId);
   }, [investmentOrders, holdings, invoiceId]);
 
   if (!invoiceData) return null;
+  const sipAmount = Number(invoiceData.sipAmount);
+  const toBeEarned = Math.floor(sipAmount * 0.02);
+  const usedBlinkCoins = Math.min(blinkCoinBalance, sipAmount);
+  const storedUsedBlinkCoins = invoiceData.blinkCoinsUsed ?? usedBlinkCoins;
+  const storedEarnedBlinkCoins = invoiceData.blinkCoinsEarned ?? toBeEarned;
 
   return (
     <ThemedView type="background" style={styles.container}>
@@ -139,6 +145,17 @@ export default function SipDetailsScreen() {
                 Complete bank linking to move this SIP forward.
               </ThemedText> */}
             </ThemedView>
+          </ThemedView>
+          <ThemedView type="backgroundElement" style={styles.coinCard}>
+            <ThemedText style={styles.coinTitle}>Blink Coin Usage</ThemedText>
+            <CoinRow label="Blink Coin Balance" value={blinkCoinBalance} />
+            <CoinRow label="To Be Earned" value={storedEarnedBlinkCoins} />
+            <CoinRow label="Used Blink Coins" value={storedUsedBlinkCoins} />
+            <ThemedView style={styles.divider} />
+            <CoinRow label="Total" value={sipAmount - storedUsedBlinkCoins} />
+            <ThemedText themeColor="textSecondary" style={styles.coinInfo}>
+              ⓘ 2% of your SIP amount is earned as Blink Coins.
+            </ThemedText>
           </ThemedView>
 
           {/* <ThemedView type="backgroundElement" style={styles.journeyCard}>
@@ -250,6 +267,15 @@ function DetailRow({
   );
 }
 
+function CoinRow({ label, value }: { label: string; value: number }) {
+  return (
+    <ThemedView style={styles.coinRow}>
+      <ThemedText themeColor="textSecondary">{label}</ThemedText>
+      <ThemedText style={styles.coinValue}>{value.toLocaleString("en-IN")}</ThemedText>
+    </ThemedView>
+  );
+}
+
 const styles = StyleSheet.create({
   container: { flex: 1 },
   safeArea: {
@@ -263,6 +289,11 @@ const styles = StyleSheet.create({
   content: { paddingTop: Spacing.two, paddingBottom: Spacing.four, gap: 24 },
   pageTitle: { fontSize: 24, lineHeight: 30, fontFamily: "Mulish-Bold" },
   detailsCard: { borderRadius: 16, padding: 20, gap: 12 },
+  coinCard: { borderRadius: 16, padding: 20, gap: 10 },
+  coinTitle: { fontSize: 16, lineHeight: 20, fontFamily: "Mulish-Bold" },
+  coinRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  coinValue: { fontFamily: "Mulish-SemiBold" },
+  coinInfo: { fontSize: 12, lineHeight: 17, marginTop: 4 },
   fundHeader: {
     flexDirection: "row",
     alignItems: "flex-start",

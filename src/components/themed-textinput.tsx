@@ -65,7 +65,7 @@ function resolveKeyboardType(inputType: InputType): KeyboardTypeOptions {
 //     maximumFractionDigits: 0,
 //   }).format(Number(cleaned));
 // }
-export function formatAmount(raw: string): string {
+function formatAmount(raw: string): string {
   const cleaned = raw.replace(/[^0-9]/g, "");
   return cleaned;
 }

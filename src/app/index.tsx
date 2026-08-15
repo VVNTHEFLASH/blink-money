@@ -1,5 +1,5 @@
 import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -11,6 +11,7 @@ import Header from "@/components/ui/header";
 import ImageCarousel from "@/components/ui/HomeCarousel";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
+import { useAppSelector } from "@/store/hooks";
 import Feather from "@react-native-vector-icons/feather";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import Lucide from "@react-native-vector-icons/lucide";
@@ -314,6 +315,14 @@ const whyBlinkMoney = [
 
 export default function HomeScreen() {
   const theme = useTheme();
+  const router = useRouter();
+  const holdings = useAppSelector((state) => state.save.holdings);
+  const blinkCoins = useAppSelector((state) => state.rewards.blinkCoins);
+  const totalInvestedAmount = holdings.reduce(
+    (total, holding) => total + Number(holding.sipAmount),
+    0,
+  );
+  const tier = getUserTier(totalInvestedAmount);
 
   return (
     <ThemedView style={[styles.container, {}]} type="background">
@@ -326,6 +335,33 @@ export default function HomeScreen() {
           showsVerticalScrollIndicator={false}
         >
           <ImageCarousel />
+          <ThemedView style={styles.topRewardsRow}>
+            <Pressable
+              onPress={() => router.push("/rewards")}
+              style={styles.leftRewardsInfo}
+            >
+              <ThemedText
+                style={[styles.coinBalanceText, { color: theme.accent }]}
+              >
+                Blink Coins - ₹{blinkCoins.toLocaleString("en-IN")}
+              </ThemedText>
+              <ThemedText
+                themeColor="textSecondary"
+                style={styles.investedAmountText}
+              >
+                Total Invested - ₹{totalInvestedAmount.toLocaleString("en-IN")}
+              </ThemedText>
+            </Pressable>
+            <Pressable
+              onPress={() => router.push("/rewards")}
+              style={styles.tierLink}
+            >
+              <Feather name="star" size={15} color={tier.color} />
+              <ThemedText style={[styles.tierLinkText, { color: tier.color }]}>
+                {tier.label}
+              </ThemedText>
+            </Pressable>
+          </ThemedView>
           <ThemedView>
             <ThemedText style={styles.sectionTitle}>Features</ThemedText>
             <ThemedView style={styles.gridContainer}>
@@ -350,6 +386,18 @@ export default function HomeScreen() {
   );
 }
 
+function getUserTier(totalInvestedAmount: number) {
+  if (totalInvestedAmount > 99999)
+    return { tier: "Platinum", color: "#7B8794", label: "Wealth Master" };
+  if (totalInvestedAmount > 9999)
+    return { tier: "Gold", color: "#D4AF37", label: "Wealth Strategist" };
+  if (totalInvestedAmount > 999)
+    return { tier: "Silver", color: "#A8A8A8", label: "Wealth Builder" };
+  if (totalInvestedAmount > 99)
+    return { tier: "Bronze", color: "#CD7F32", label: "Budget Starter" };
+  return { tier: "", color: "#808080" };
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -364,6 +412,42 @@ const styles = StyleSheet.create({
   scrollContent: {
     gap: Spacing.three,
     paddingBottom: Spacing.three,
+  },
+  tierLink: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    paddingHorizontal: Spacing.one,
+    paddingVertical: 2,
+    marginTop: 10,
+  },
+  tierLinkText: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontFamily: "Mulish-Bold",
+  },
+  topRewardsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  leftRewardsInfo: {
+    gap: 2,
+  },
+  investedAmountText: {
+    fontSize: 11,
+    lineHeight: 15,
+    fontFamily: "Mulish-Bold",
+  },
+  coinBalance: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 2,
+  },
+  coinBalanceText: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontFamily: "Mulish-Bold",
   },
   faqSection: { gap: Spacing.two },
   faqList: { overflow: "hidden", borderRadius: 16 },

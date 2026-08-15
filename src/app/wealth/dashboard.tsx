@@ -1,6 +1,5 @@
 import { ThemedScrollView } from "@/components/themed-scrollview";
 import { ThemedText } from "@/components/themed-text";
-import { formatAmount } from "@/components/themed-textinput";
 import { ThemedView } from "@/components/themed-view";
 import Header from "@/components/ui/header";
 import ThemedButton from "@/components/ui/themed-button";
@@ -12,6 +11,7 @@ import { useRouter } from "expo-router";
 import { useMemo } from "react";
 import { Alert, Pressable, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { formatAmount } from "./sip";
 
 function QuickAccess({
   icon,
@@ -120,7 +120,7 @@ export default function DashboardScreen() {
             </ThemedText>
             <ThemedView style={styles.balanceRow}>
               <ThemedText style={styles.balance}>
-                {formatAmount(String(basketData.summary.totalInvestedAmount))}
+                {formatAmount(basketData.summary.totalInvestedAmount)}
               </ThemedText>
               <ThemedText themeColor="textSecondary" style={styles.currency}>
                 INR

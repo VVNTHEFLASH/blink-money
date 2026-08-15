@@ -21,7 +21,16 @@ const initialState: RewardsState = {
 const rewardsSlice = createSlice({
   name: "rewards",
   initialState,
-  reducers: {},
+  reducers: {
+    addBlinkCoins: (state, action: { payload: number }) => {
+      state.blinkCoins += action.payload;
+    },
+    applyBlinkCoinUsage: (state, action: { payload: { earned: number; used: number } }) => {
+      state.blinkCoins = Math.max(0, state.blinkCoins + action.payload.earned - action.payload.used);
+    },
+  },
 });
+
+export const { addBlinkCoins, applyBlinkCoinUsage } = rewardsSlice.actions;
 
 export default rewardsSlice.reducer;

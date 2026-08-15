@@ -5,9 +5,9 @@ import Footer from "@/components/ui/footer";
 import Header from "@/components/ui/header";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
+import { useAppSelector } from "@/store/hooks";
 import Feather from "@react-native-vector-icons/feather";
 import { useRouter } from "expo-router";
-import { useState } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -74,8 +74,15 @@ const REWARDS_TIERS_DATA = [
 export default function RewardsScreen() {
   const theme = useTheme();
   const router = useRouter();
-  const [activeTierIndex, setActiveTierIndex] = useState(3);
-  const tier = REWARDS_TIERS_DATA[activeTierIndex];
+  const { blinkCoins } = useAppSelector((state) => state.rewards);
+  const holdings = useAppSelector((state) => state.save.holdings);
+  const dailySavingCount = holdings.filter((holding) => holding.frequency === "daily").length;
+  const monthlySavingCount = holdings.filter((holding) => holding.frequency === "monthly").length;
+  const totalInvestedAmount = holdings.reduce((total, holding) => total + Number(holding.sipAmount), 0);
+  const getMultiplier = (count: number) => Math.min(count, 3);
+  const dailyMultiplier = getMultiplier(dailySavingCount);
+  const monthlyMultiplier = getMultiplier(monthlySavingCount);
+  const tier = getTier(totalInvestedAmount);
 
   const icon = (
     name: React.ComponentProps<typeof Feather>["name"],
@@ -141,36 +148,36 @@ export default function RewardsScreen() {
               Blink coins balance
             </ThemedText>
             <ThemedText themeColor="textSecondary" style={styles.balanceValue}>
-              2,840 Blink Coins
+              {blinkCoins.toLocaleString("en-IN")} Blink Coins
             </ThemedText>
           </ThemedView>
           <ThemedView style={styles.row}>
             <StreakCard
               icon="zap"
               title="Daily Saving"
-              value="7 days"
-              badge="×3 multiplier"
-              note="Keep saving daily to maintain your ×3 reward multiplier."
+              value={`${dailySavingCount} ${dailySavingCount === 1 ? "day" : "days"}`}
+              badge={`×${dailyMultiplier} multiplier`}
+              note={`Keep saving daily to maintain your ×${dailyMultiplier} reward multiplier.`}
             />
             <StreakCard
               icon="calendar"
               title="Monthly Saving"
-              value="4 months"
-              badge="×3 multiplier"
-              note="Your monthly saving reward multiplier is ×3."
+              value={`${monthlySavingCount} ${monthlySavingCount === 1 ? "month" : "months"}`}
+              badge={`×${monthlyMultiplier} multiplier`}
+              note={`Your monthly saving reward multiplier is ×${monthlyMultiplier}.`}
             />
           </ThemedView>
           <ThemedView type="backgroundElement" style={styles.repaymentCard}>
             {icon("check-circle")}
             <ThemedText style={styles.cardTitle}>Repayment Streak</ThemedText>
             <ThemedText themeColor="textSecondary" style={styles.cardValue}>
-              3 months
+              0 months
             </ThemedText>
             <ThemedText themeColor="textSecondary" style={styles.cardNote}>
               Keep repayments on time.
             </ThemedText>
             <ThemedView type="surface" style={styles.largeBadge}>
-              <ThemedText style={styles.largeBadgeValue}>{"×3"}</ThemedText>
+              <ThemedText style={styles.largeBadgeValue}>×0</ThemedText>
               <ThemedText style={styles.largeBadgeLabel}>MULTIPLIER</ThemedText>
             </ThemedView>
           </ThemedView>
@@ -180,6 +187,19 @@ export default function RewardsScreen() {
       </SafeAreaView>
     </ThemedView>
   );
+}
+
+function getTier(totalInvestedAmount: number) {
+  if (totalInvestedAmount > 99999) return REWARDS_TIERS_DATA[3];
+  if (totalInvestedAmount > 9999) return REWARDS_TIERS_DATA[2];
+  if (totalInvestedAmount > 999) return REWARDS_TIERS_DATA[1];
+  if (totalInvestedAmount > 99) return REWARDS_TIERS_DATA[0];
+  return {
+    tier: "No Tier",
+    label: "Getting Started",
+    desc: "Invest more to unlock your first rewards tier.",
+    color: "#808080",
+  };
 }
 
 const styles = StyleSheet.create({

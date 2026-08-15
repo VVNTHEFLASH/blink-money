@@ -73,7 +73,7 @@ interface PopularPlanButtonProps {
   onPress: (amount: number) => void;
 }
 
-function formatAmount(amount: number) {
+export function formatAmount(amount: number) {
   return new Intl.NumberFormat("en-IN", {
     maximumFractionDigits: 0,
   }).format(amount);

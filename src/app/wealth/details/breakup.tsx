@@ -3,7 +3,8 @@ import { ThemedView } from "@/components/themed-view";
 import Header from "@/components/ui/header";
 import { MaxContentWidth } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { applyBlinkCoinUsage } from "@/store/slices/rewardsSlice";
 import {
     addHolding,
     addInvestmentOrder,
@@ -19,6 +20,8 @@ export default function BreakupScreen() {
   const theme = useTheme();
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const blinkCoinBalance = useAppSelector((state) => state.rewards.blinkCoins);
+  const holdings = useAppSelector((state) => state.save.holdings);
   const params = useLocalSearchParams<{
     amount?: string;
     frequency?: string;
@@ -37,6 +40,14 @@ export default function BreakupScreen() {
     amount: `₹${Number(amount).toLocaleString("en-IN")}`,
     startDate,
   };
+  const sipAmount = Number(amount);
+  const frequencySavingCount = holdings.filter(
+    (holding) => holding.frequency === frequency,
+  ).length;
+  const rewardMultiplier = Math.min(frequencySavingCount, 3);
+  const toBeEarned = Math.floor(sipAmount * 0.02 * rewardMultiplier);
+  const usedBlinkCoins = Math.min(blinkCoinBalance, sipAmount);
+  const totalAmount = sipAmount - usedBlinkCoins;
   const makeOrder = () => ({
     id: orderId,
     fundId: "FND10000000",
@@ -46,6 +57,8 @@ export default function BreakupScreen() {
     sipAmount: Number(amount).toFixed(2),
     frequency,
     investmentDay,
+    blinkCoinsEarned: toBeEarned,
+    blinkCoinsUsed: usedBlinkCoins,
     goal: null,
     createdAt,
   });
@@ -74,6 +87,13 @@ export default function BreakupScreen() {
               </>
             )}
           </ThemedView>
+          <BlinkCoinCard
+            balance={blinkCoinBalance}
+            toBeEarned={toBeEarned}
+            used={usedBlinkCoins}
+            total={totalAmount}
+            multiplier={rewardMultiplier}
+          />
           <ThemedView style={styles.actions}>
             <Pressable
               accessibilityRole="button"
@@ -86,6 +106,7 @@ export default function BreakupScreen() {
                     status: "active",
                   }),
                 );
+                dispatch(applyBlinkCoinUsage({ earned: toBeEarned, used: usedBlinkCoins }));
                 router.replace("/(tabs)");
               }}
               style={[styles.confirmButton, { backgroundColor: theme.accent }]}
@@ -116,6 +137,45 @@ export default function BreakupScreen() {
           </ThemedView>
         </ThemedView>
       </SafeAreaView>
+    </ThemedView>
+  );
+}
+
+function BlinkCoinCard({
+  balance,
+  toBeEarned,
+  used,
+  total,
+  multiplier,
+}: {
+  balance: number;
+  toBeEarned: number;
+  used: number;
+  total: number;
+  multiplier: number;
+}) {
+  return (
+    <ThemedView type="backgroundElement" style={styles.coinCard}>
+      <ThemedText style={styles.coinTitle}>Blink Coin Usage</ThemedText>
+      <CoinRow label="Blink Coin Balance" value={balance} />
+      <CoinRow label={`Earned (×${multiplier})`} value={toBeEarned} />
+      <CoinRow label="Used" value={used} />
+      <ThemedView style={styles.divider} />
+      <CoinRow label="Total" value={total} />
+      <ThemedText themeColor="textSecondary" style={styles.coinInfo}>
+        ⓘ Earned Blink Coins = 2% of SIP Amount × {multiplier} multiplier.
+      </ThemedText>
+    </ThemedView>
+  );
+}
+
+function CoinRow({ label, value }: { label: string; value: number }) {
+  return (
+    <ThemedView style={styles.coinRow}>
+      <ThemedText themeColor="textSecondary">{label}</ThemedText>
+      <ThemedText style={styles.coinValue}>
+        ₹{value.toLocaleString("en-IN")}
+      </ThemedText>
     </ThemedView>
   );
 }
@@ -167,6 +227,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
   },
+  coinCard: { borderRadius: 16, padding: 20, gap: 10, marginTop: 20 },
+  coinTitle: { fontSize: 16, lineHeight: 20, fontFamily: "Mulish-Bold" },
+  coinRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  coinValue: { fontFamily: "Mulish-SemiBold" },
+  coinInfo: { fontSize: 12, lineHeight: 17, marginTop: 4 },
   fundName: {
     fontSize: 16,
     lineHeight: 20,

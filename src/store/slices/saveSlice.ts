@@ -45,6 +45,8 @@ export interface InvestmentOrder {
   sipAmount: string;
   frequency: "daily" | "monthly";
   investmentDay: number;
+  blinkCoinsEarned?: number;
+  blinkCoinsUsed?: number;
   goal: null;
   createdAt: string;
 }
