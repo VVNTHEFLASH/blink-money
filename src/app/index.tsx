@@ -316,7 +316,7 @@ export default function HomeScreen() {
   const theme = useTheme();
 
   return (
-    <ThemedView style={styles.container} type="background">
+    <ThemedView style={[styles.container, {}]} type="background">
       <SafeAreaView style={styles.safeArea}>
         <Header />
         <ThemedScrollView
@@ -353,18 +353,17 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    flexDirection: "row",
   },
   safeArea: {
     flex: 1,
     paddingHorizontal: Spacing.four,
     maxWidth: MaxContentWidth,
+    paddingBottom: BottomTabInset,
   },
   scrollView: { flex: 1 },
   scrollContent: {
     gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
+    paddingBottom: Spacing.three,
   },
   faqSection: { gap: Spacing.two },
   faqList: { overflow: "hidden", borderRadius: 16 },
@@ -444,6 +443,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 20,
     fontWeight: "700",
+    marginTop: Spacing.three,
   },
   cardCopy: {
     // gap: 6

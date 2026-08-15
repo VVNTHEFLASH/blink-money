@@ -4,12 +4,18 @@ import { ThemedTextInput } from "@/components/themed-textinput";
 import { ThemedView } from "@/components/themed-view";
 import Header from "@/components/ui/header";
 import ThemedButton from "@/components/ui/themed-button";
-import { MaxContentWidth, Spacing, ThemeColor } from "@/constants/theme";
+import {
+  BottomTabInset,
+  MaxContentWidth,
+  Spacing,
+  ThemeColor,
+} from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 import Feather from "@react-native-vector-icons/feather";
 import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
 import Lucide, { LucideIconName } from "@react-native-vector-icons/lucide";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { RefObject, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -140,7 +146,7 @@ function GenericPlanView({
           onPress={() => onPressMinus(amount, minimumAmount)}
         />
         <ThemedView
-          type="backgroundElement"
+          // type="backgroundElement"
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -459,7 +465,7 @@ const GenericFundAllocationView = ({ amount }: { amount: string }) => {
         style={[
           {
             flexDirection: "row",
-            padding: Spacing.three,
+            padding: Spacing.two,
             justifyContent: "space-between",
             alignItems: "center",
           },
@@ -511,7 +517,7 @@ const GenericFundAllocationView = ({ amount }: { amount: string }) => {
     //   keyExtractor={(item) => item.title}
     //   ItemSeparatorComponent={() => <ThemedView />}
     // />
-    <ThemedView>
+    <ThemedView style={{ marginTop: Spacing.two }}>
       <ThemedText
         themeColor="faqTitle"
         style={{ fontSize: 13, fontWeight: "bold" }}
@@ -523,6 +529,9 @@ const GenericFundAllocationView = ({ amount }: { amount: string }) => {
           <ThemedView key={index}>{renderItem(item, index)}</ThemedView>
         ))}
       </ThemedView>
+      <ThemedText type="XXsmall" themeColor={"faqDescription"}>
+        For informational purposes only
+      </ThemedText>
     </ThemedView>
   );
 };
@@ -709,7 +718,14 @@ function MonthlyTab({
           >
             <Lucide name="calendar" size={16} color={theme.faqDescription} />
           </ThemedView>
-          <ThemedText themeColor="faqDescription" style={{ fontSize: 12 }}>
+          <ThemedText
+            themeColor="faqTitle"
+            type="Xsmall"
+            style={{
+              fontWeight: "bold",
+              fontFamily: undefined,
+            }}
+          >
             Invest every {`18th`} of the month
           </ThemedText>
         </ThemedView>
@@ -732,6 +748,7 @@ const Tabs = {
 };
 
 const sip = () => {
+  const router = useRouter();
   const theme = useTheme();
   const [activeTab, setActiveTab] = useState(TAB_ENUMS.MONTHLY);
   const [amount, setAmount] = useState(MONTHLY_DEFAULT_VALUE);
@@ -749,11 +766,19 @@ const sip = () => {
     console.log("Continue with SIP");
   };
 
+  const handleBackPress = () => {
+    router.back();
+  };
   return (
     <ThemedView style={styles.container} type="background">
       <SafeAreaView style={styles.safeArea}>
-        <Header />
-        <ThemedScrollView style={{ flex: 1 }}>
+        <Header onBackPress={handleBackPress} />
+        <ThemedScrollView
+          type="background"
+          style={[styles.scrollView]}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
           <ThemedView style={styles.tabContainer} type="surface">
             <Pressable
               style={{ flex: 1 }}
@@ -850,16 +875,17 @@ export default sip;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    flexDirection: "row",
   },
   safeArea: {
     flex: 1,
     paddingHorizontal: Spacing.four,
-    // alignItems: "center",
-    gap: Spacing.three,
-    // paddingBottom: BottomTabInset + Spacing.three,
+    paddingBottom: BottomTabInset,
     maxWidth: MaxContentWidth,
+  },
+  scrollView: { flex: 1 },
+  scrollContent: {
+    gap: Spacing.three,
+    paddingBottom: Spacing.three,
   },
   tabContainer: {
     flexDirection: "row",

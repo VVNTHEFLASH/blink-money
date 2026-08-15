@@ -1,16 +1,11 @@
 import { FontAwesome6 } from "@react-native-vector-icons/fontawesome6";
 import type { ComponentProps } from "react";
-import {
-  Alert,
-  Linking,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Alert, Linking, Pressable, StyleSheet } from "react-native";
 
 import { useTheme } from "@/hooks/use-theme";
 import Lucide from "@react-native-vector-icons/lucide";
+import { ThemedText } from "../themed-text";
+import { ThemedView } from "../themed-view";
 
 const Header = ({
   name = "VISHNUVARDHAN",
@@ -19,6 +14,7 @@ const Header = ({
   onHelpPress = undefined,
   showHelp = true,
   avatarIcon = "user",
+  onBackPress,
 }: {
   name?: string;
   greeting?: string;
@@ -26,6 +22,7 @@ const Header = ({
   onHelpPress?: () => void;
   showHelp?: boolean;
   avatarIcon?: ComponentProps<typeof Lucide>["name"];
+  onBackPress?: () => void;
 }) => {
   const theme = useTheme();
   const helpColor = theme.primaryInk;
@@ -52,27 +49,56 @@ const Header = ({
 
   const handleHelpPress = onHelpPress ?? (() => openWhatsApp());
 
+  const renderBackButton = () => {
+    return (
+      <Pressable onPress={onBackPress}>
+        <ThemedView
+          style={{
+            width: 32,
+            height: 32,
+            borderRadius: 16,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Lucide name="chevron-left" size={18} color={theme.iconColor} />
+        </ThemedView>
+      </Pressable>
+    );
+  };
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <View style={styles.identity}>
-        <View style={[styles.avatar, { backgroundColor: theme.accent }]}>
-          <View style={[styles.avatarInner, { borderColor: helpColor }]}>
-            <Lucide name={avatarIcon} size={18} color={helpColor} />
-          </View>
-        </View>
-        <View style={styles.copy}>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            style={[styles.greeting, { color: theme.text }]}
+    <ThemedView
+      style={[styles.container, { backgroundColor: theme.background }]}
+    >
+      {onBackPress ? (
+        renderBackButton()
+      ) : (
+        <ThemedView style={styles.identity}>
+          <ThemedView
+            style={[styles.avatar, { backgroundColor: theme.accent }]}
           >
-            {greeting} {name}
-          </Text>
-          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-            {subtitle}
-          </Text>
-        </View>
-      </View>
+            <ThemedView
+              style={[styles.avatarInner, { borderColor: helpColor }]}
+            >
+              <Lucide name={avatarIcon} size={18} color={helpColor} />
+            </ThemedView>
+          </ThemedView>
+          <ThemedView style={styles.copy}>
+            <ThemedText
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={[styles.greeting, { color: theme.text }]}
+            >
+              {greeting} {name}
+            </ThemedText>
+            <ThemedText
+              style={[styles.subtitle, { color: theme.textSecondary }]}
+            >
+              {subtitle}
+            </ThemedText>
+          </ThemedView>
+        </ThemedView>
+      )}
 
       {showHelp && (
         <Pressable
@@ -90,10 +116,12 @@ const Header = ({
             size={18}
             color={helpColor}
           />
-          <Text style={[styles.helpLabel, { color: helpColor }]}>Help</Text>
+          <ThemedText style={[styles.helpLabel, { color: helpColor }]}>
+            Help
+          </ThemedText>
         </Pressable>
       )}
-    </View>
+    </ThemedView>
   );
 };
 

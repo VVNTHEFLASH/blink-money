@@ -5,12 +5,12 @@ import {
   StyleSheet,
   TextInput,
   type TextInputProps,
-  View
 } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { type ThemeColor } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
+import { ThemedView } from "./themed-view";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -214,7 +214,7 @@ export const ThemedTextInput = forwardRef<TextInput, ThemedTextInputProps>(
     ) : null;
 
     return (
-      <View
+      <ThemedView
         style={[styles.wrapper, isHorizontal && styles.wrapperHorizontal]}
         // Wrapper is not interactive — keep it out of the accessibility tree
         accessible={false}
@@ -223,7 +223,7 @@ export const ThemedTextInput = forwardRef<TextInput, ThemedTextInputProps>(
         {labelNode}
         {input}
         {errorNode}
-      </View>
+      </ThemedView>
     );
   },
 );

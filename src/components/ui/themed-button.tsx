@@ -11,13 +11,17 @@ type ThemedButtonProps = PressableProps & {
   href?: string;
 };
 
-export default function ThemedButton({ label, href, ...props }: ThemedButtonProps) {
+export default function ThemedButton({
+  label,
+  href,
+  ...props
+}: ThemedButtonProps) {
   const theme = useTheme();
 
   const button = (
     <Pressable {...props}>
       <ThemedView type="accent" style={styles.cta}>
-        <ThemedText style={[styles.ctaText, { color: theme.primaryInk }]}>
+        <ThemedText style={[styles.ctaText, { color: theme.buttonText }]}>
           {label}
         </ThemedText>
       </ThemedView>
@@ -43,5 +47,5 @@ const styles = StyleSheet.create({
     padding: Spacing.three,
     gap: Spacing.two,
   },
-  ctaText: { fontSize: 13, lineHeight: 16 },
+  ctaText: { fontSize: 13, lineHeight: 16, fontFamily: "Mulish-Bold" },
 });

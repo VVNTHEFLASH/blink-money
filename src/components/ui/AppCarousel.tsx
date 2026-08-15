@@ -46,6 +46,7 @@ interface PaginationDotProps {
   index: number;
   /** Fractional scroll position shared value — updated every frame */
   progressValue: SharedValue<number>;
+  count: number;
   activeColor: string;
   inactiveColor: string;
 }
@@ -53,13 +54,19 @@ interface PaginationDotProps {
 function PaginationDot({
   index,
   progressValue,
+  count,
   activeColor,
   inactiveColor,
 }: PaginationDotProps) {
   const animatedStyle = useAnimatedStyle(() => {
     // Distance of this dot from the current fractional scroll position
     // e.g. progressValue=1.5 means halfway between item 1 and 2
-    const distance = Math.abs(progressValue.value - index);
+    // The carousel's progress is a raw position and can continue past the
+    // end of the data when looping (e.g. 5, 6, ... for five items). Compare
+    // against the nearest logical position so pagination remains in range.
+    const logicalProgress = ((progressValue.value % count) + count) % count;
+    const directDistance = Math.abs(logicalProgress - index);
+    const distance = Math.min(directDistance, count - directDistance);
 
     // Active dot (distance=0) → 20px wide; inactive (distance≥1) → 8px
     const width = interpolate(distance, [0, 1], [20, 8], "clamp");
@@ -102,6 +109,7 @@ function Pagination({
           key={i}
           index={i}
           progressValue={progressValue}
+          count={count}
           activeColor={activeColor}
           inactiveColor={inactiveColor}
         />

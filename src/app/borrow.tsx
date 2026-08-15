@@ -1,6 +1,5 @@
 import { ImageBackground } from "expo-image";
-import { Link } from "expo-router";
-import { Pressable, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemedScrollView } from "@/components/themed-scrollview";
@@ -8,6 +7,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import Footer from "@/components/ui/footer";
 import Header from "@/components/ui/header";
+import ThemedButton from "@/components/ui/themed-button";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 
@@ -128,20 +128,19 @@ export default function BorrowScreen() {
           </ThemedView>
 
           <ThemedView>
-            <ThemedText style={styles.setup}>
+            <ThemedText style={[styles.setup, { color: theme.faqDescription }]}>
               4 min setup. Cancel anytime.
             </ThemedText>
-            <Link href="/save" asChild>
+            {/* <Link href="/save" asChild>
               <Pressable>
                 <ThemedView type="accent" style={styles.cta}>
-                  <ThemedText
-                    style={[styles.ctaText, { color: theme.primaryInk }]}
-                  >
+                  <ThemedText style={[styles.ctaText]}>
                     Start SIP · From ₹21/day
                   </ThemedText>
                 </ThemedView>
               </Pressable>
-            </Link>
+            </Link> */}
+            <ThemedButton label="Start SIP · From ₹21/day" href="/save" />
           </ThemedView>
           <Footer />
         </ThemedScrollView>
@@ -161,7 +160,7 @@ const styles = StyleSheet.create({
   scrollView: { flex: 1 },
   scrollContent: {
     gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
+    paddingBottom: BottomTabInset,
   },
   hero: {
     width: "100%",
@@ -261,8 +260,7 @@ const styles = StyleSheet.create({
   alignRight: { alignItems: "flex-end" },
   setup: {
     textAlign: "center",
-    color: "#B0B4BA",
-    fontSize: 11,
+    fontSize: 10,
     lineHeight: 28,
   },
   amountLabel: { fontSize: 11, lineHeight: 12 },
@@ -273,5 +271,10 @@ const styles = StyleSheet.create({
     padding: Spacing.three,
     gap: Spacing.two,
   },
-  ctaText: { fontSize: 13, lineHeight: 16, color: "#296600" },
+  ctaText: {
+    fontSize: 13,
+    lineHeight: 16,
+    color: "#296600",
+    fontFamily: "Mulish-Bold",
+  },
 });

@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.four,
     // alignItems: "center",
     gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
+    paddingBottom: BottomTabInset,
     maxWidth: MaxContentWidth,
   },
 });

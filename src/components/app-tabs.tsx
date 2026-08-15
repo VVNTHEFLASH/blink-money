@@ -11,8 +11,9 @@ import {
 import { Pressable, StyleSheet, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Colors } from "@/constants/theme";
+import { Colors, Spacing } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useTheme } from "@/hooks/use-theme";
 
 const tabs = [
   { name: "home", label: "Home", icon: "home" },
@@ -24,16 +25,22 @@ const tabs = [
 export default function AppTabs() {
   const insets = useSafeAreaInsets();
   const scheme = useColorScheme();
+  const theme = useTheme();
   return (
-    <Tabs style={{ flex: 1 }}>
+    <Tabs
+      style={{
+        flex: 1,
+        backgroundColor: theme.transparent,
+      }}
+    >
       <TabSlot style={styles.slot} />
       <TabList
         style={[
           styles.outer,
           {
-            marginBottom: Math.max(insets.bottom, 8) + 10,
-            backgroundColor:
-              scheme === "dark" ? "rgba(11, 15, 10, 0.92)" : "#FFF",
+            marginBottom: Math.max(insets.bottom, 8),
+            // backgroundColor:
+            //   scheme === "dark" ? "rgba(11, 15, 10, 0.92)" : "#FFF",
           },
         ]}
       >
@@ -110,12 +117,11 @@ function TabButton({
 const styles = StyleSheet.create({
   slot: { flex: 1 },
   outer: {
-    marginHorizontal: 24,
+    marginHorizontal: Spacing.two,
     maxWidth: 768,
     alignSelf: "center",
-    width: "100%",
-    padding: 4,
-    height: 62,
+    padding: 2,
+    height: 56,
     alignItems: "stretch",
     flexDirection: "row",
     borderWidth: 2,

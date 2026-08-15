@@ -26,7 +26,8 @@ export const Colors = {
     surface: "#f3f5f1",
     textFaint: "#94A3B8",
     shadowColor: "transparent",
-    infoBgColor: "d4e6ff",
+    infoBgColor: "#d4e6ff",
+    buttonText: "#296600",
   },
   dark: {
     text: "#ffffff",
@@ -47,6 +48,7 @@ export const Colors = {
     textFaint: "#7F8B78",
     shadowColor: "transparent",
     infoBgColor: "#10242d",
+    buttonText: "#296600",
   },
 } as const;
 
@@ -87,5 +89,6 @@ export const Spacing = {
   six: 64,
 } as const;
 
-export const BottomTabInset = Platform.select({ ios: 50, android: 80, web: 0 }) ?? 0;
+export const BottomTabInset =
+  Platform.select({ ios: 50, android: -24, web: 0 }) ?? 0;
 export const MaxContentWidth = 800;

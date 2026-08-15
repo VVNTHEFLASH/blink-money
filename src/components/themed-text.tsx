@@ -8,6 +8,8 @@ export type ThemedTextProps = TextProps & {
     | "default"
     | "title"
     | "small"
+    | "Xsmall"
+    | "XXsmall"
     | "smallBold"
     | "subtitle"
     | "link"
@@ -31,6 +33,8 @@ export function ThemedText({
         type === "default" && styles.default,
         type === "title" && styles.title,
         type === "small" && styles.small,
+        type === "Xsmall" && styles.Xsmall,
+        type === "XXsmall" && styles.XXsmall,
         type === "smallBold" && styles.smallBold,
         type === "subtitle" && styles.subtitle,
         type === "link" && styles.link,
@@ -44,6 +48,16 @@ export function ThemedText({
 }
 
 const styles = StyleSheet.create({
+  XXsmall: {
+    fontFamily: "Mulish-Regular",
+    fontSize: 10,
+    lineHeight: 20,
+  },
+  Xsmall: {
+    fontFamily: "Mulish-Regular",
+    fontSize: 12,
+    lineHeight: 20,
+  },
   small: {
     fontFamily: "Mulish-Regular",
     fontSize: 14,
