@@ -1,3 +1,4 @@
+import { ThemedDatePicker } from "@/components/themed-datepicker";
 import { ThemedScrollView } from "@/components/themed-scrollview";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedTextInput } from "@/components/themed-textinput";
@@ -618,10 +619,31 @@ function DailyTab({
   );
 }
 
+/** Return ordinal suffix for a positive integer day and the full formatted string */
+export function getOrdinalSuffix(n: number): string {
+  const abs = Math.abs(Math.floor(n));
+  const rem100 = abs % 100;
+  if (rem100 >= 11 && rem100 <= 13) return "th";
+  const rem10 = abs % 10;
+  if (rem10 === 1) return "st";
+  if (rem10 === 2) return "nd";
+  if (rem10 === 3) return "rd";
+  return "th";
+}
+
+/** Return the number with suffix, e.g. 1 -> "1st", 31 -> "31st" */
+export function formatOrdinal(n: number): string {
+  return `${n}${getOrdinalSuffix(n)}`;
+}
+
 function MonthlyTab({
   onAmountChange,
+  setShowDatePicker,
+  selectedDay,
 }: {
   onAmountChange?: (amount: string) => void;
+  setShowDatePicker?: (show: boolean) => void;
+  selectedDay?: number;
 }) {
   const theme = useTheme();
   const amountRef = useRef<TextInput>(null);
@@ -688,49 +710,57 @@ function MonthlyTab({
         disabled={disabled}
       />
       <GenericGrowthView amount={amount} isDay={false} />
-      <ThemedView
-        type="surface"
-        style={{
-          borderRadius: 16,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: Spacing.two,
-          marginBlock: Spacing.three,
+      <Pressable
+        onPress={() => {
+          if (setShowDatePicker) {
+            setShowDatePicker(true);
+          }
         }}
       >
         <ThemedView
+          type="surface"
           style={{
+            borderRadius: 16,
             flexDirection: "row",
+            justifyContent: "space-between",
             alignItems: "center",
-            justifyContent: "center",
-            gap: Spacing.two,
+            padding: Spacing.two,
+            marginBlock: Spacing.three,
           }}
         >
           <ThemedView
-            type="backgroundElement"
             style={{
+              flexDirection: "row",
               alignItems: "center",
               justifyContent: "center",
-              padding: Spacing.two,
-              borderRadius: 32,
+              gap: Spacing.two,
             }}
           >
-            <Lucide name="calendar" size={16} color={theme.faqDescription} />
+            <ThemedView
+              type="backgroundElement"
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                padding: Spacing.two,
+                borderRadius: 32,
+              }}
+            >
+              <Lucide name="calendar" size={16} color={theme.faqDescription} />
+            </ThemedView>
+            <ThemedText
+              themeColor="faqTitle"
+              type="Xsmall"
+              style={{
+                fontWeight: "bold",
+                fontFamily: undefined,
+              }}
+            >
+              Invest every {formatOrdinal(Number(selectedDay))} of the month
+            </ThemedText>
           </ThemedView>
-          <ThemedText
-            themeColor="faqTitle"
-            type="Xsmall"
-            style={{
-              fontWeight: "bold",
-              fontFamily: undefined,
-            }}
-          >
-            Invest every {`18th`} of the month
-          </ThemedText>
+          <Lucide name="chevron-right" size={16} color={theme.faqDescription} />
         </ThemedView>
-        <Lucide name="chevron-right" size={16} color={theme.faqDescription} />
-      </ThemedView>
+      </Pressable>
       <GenericSchemeView />
       <GenericFundAllocationView amount={amount} />
     </ThemedView>
@@ -747,11 +777,21 @@ const Tabs = {
   MONTHLY: MonthlyTab,
 };
 
+function getInitialDayAllowNextMonth(offset = 4, base = new Date()) {
+  const d = new Date(base);
+  d.setDate(d.getDate() + offset);
+  return d.getDate();
+}
+
 const sip = () => {
   const router = useRouter();
   const theme = useTheme();
   const [activeTab, setActiveTab] = useState(TAB_ENUMS.MONTHLY);
   const [amount, setAmount] = useState(MONTHLY_DEFAULT_VALUE);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(
+    getInitialDayAllowNextMonth(4),
+  );
 
   const CurrentTab = Tabs[activeTab as keyof typeof Tabs];
 
@@ -764,6 +804,14 @@ const sip = () => {
 
   const handleContinueWithSip = () => {
     console.log("Continue with SIP");
+    router.push({
+      pathname: "/wealth/details/breakup",
+      params: {
+        amount: amount.toString(),
+        frequency: activeTab.toLowerCase(),
+        day: selectedDay.toString(),
+      },
+    });
   };
 
   const handleBackPress = () => {
@@ -772,6 +820,20 @@ const sip = () => {
   return (
     <ThemedView style={styles.container} type="background">
       <SafeAreaView style={styles.safeArea}>
+        <ThemedDatePicker
+          visible={showDatePicker}
+          onCancel={() => setShowDatePicker(false)}
+          onConfirm={(day) => {
+            setSelectedDay(day);
+            setShowDatePicker(false);
+          }}
+          initialDay={selectedDay}
+          modalStyle={
+            {
+              // TODO:
+            }
+          }
+        />
         <Header onBackPress={handleBackPress} />
         <ThemedScrollView
           type="background"
@@ -834,6 +896,8 @@ const sip = () => {
               onAmountChange={(val) =>
                 setAmount(Number(val.replace(/[^0-9]/g, "")))
               }
+              setShowDatePicker={setShowDatePicker}
+              selectedDay={selectedDay}
             />
           </ThemedView>
         </ThemedScrollView>

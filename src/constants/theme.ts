@@ -32,6 +32,8 @@ export const Colors = {
     borderColor: "#d7ded1",
     transactionSummaryCard: "#f8f9f7",
     transactionFilterIcon: "#EAF6DB",
+    datePickerColor: "#7fd957",
+    selectedDateColor: "#059669",
   },
   dark: {
     text: "#ffffff",
@@ -57,6 +59,8 @@ export const Colors = {
     borderColor: "#1d2619",
     transactionSummaryCard: "#10160f",
     transactionFilterIcon: "#18300F",
+    datePickerColor: "#7fd957",
+    selectedDateColor: "#34D399",
   },
 } as const;
 

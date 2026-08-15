@@ -1,16 +1,17 @@
 import { ThemedScrollView } from "@/components/themed-scrollview";
 import { ThemedText } from "@/components/themed-text";
+import { formatAmount } from "@/components/themed-textinput";
 import { ThemedView } from "@/components/themed-view";
 import Header from "@/components/ui/header";
 import ThemedButton from "@/components/ui/themed-button";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
+import { useAppSelector } from "@/store/hooks";
 import Feather from "@react-native-vector-icons/feather";
 import { useRouter } from "expo-router";
+import { useMemo } from "react";
 import { Alert, Pressable, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-const FUND_NAME = "ICICI Prudential Multi-Asset Fund - Growth";
 
 function QuickAccess({
   icon,
@@ -35,19 +36,34 @@ function QuickAccess({
   );
 }
 
-function SipEntry() {
+function SipEntry({
+  order,
+}: {
+  order: {
+    fundName: string;
+    status: string;
+    sipAmount: string;
+    frequency: string;
+  };
+}) {
   const theme = useTheme();
+  const statusColor =
+    order.status === "active" || order.status === "completed"
+      ? theme.buttonText
+      : "#F59E0B";
 
   return (
     <ThemedView style={styles.sipEntry}>
       <ThemedView style={styles.fundNameContainer}>
-        <ThemedText style={styles.fundName}>{FUND_NAME}</ThemedText>
+        <ThemedText style={styles.fundName}>{order.fundName}</ThemedText>
         <ThemedView style={styles.status}>
           <ThemedView
-            style={[styles.statusDot, { backgroundColor: "#F59E0B" }]}
+            style={[styles.statusDot, { backgroundColor: statusColor }]}
           />
-          <ThemedText style={[styles.statusText, { color: "#F59E0B" }]}>
-            Amount selected
+          <ThemedText style={[styles.statusText, { color: statusColor }]}>
+            {order.status === "amount_selected"
+              ? "Amount selected"
+              : order.status}
           </ThemedText>
         </ThemedView>
       </ThemedView>
@@ -55,15 +71,40 @@ function SipEntry() {
         themeColor="textSecondary"
         style={[styles.sipDetails, { color: theme.textSecondary }]}
       >
-        ₹100 • Daily
+        ₹{Number(order.sipAmount).toLocaleString("en-IN")} •{" "}
+        {order.frequency[0].toUpperCase() + order.frequency.slice(1)}
       </ThemedText>
     </ThemedView>
   );
 }
 
+const sampleSummaryData = {
+  totalInvestedAmount: 0,
+  currentMarketValue: 0,
+  returnsAndLoss: 0,
+  returnsAndLossPercentage: 0,
+  cagr: 0,
+  xirr: 0,
+  pendingInvestmentAmount: 0,
+};
+
 export default function DashboardScreen() {
   const theme = useTheme();
   const router = useRouter();
+  const { investmentOrders, holdings } = useAppSelector((state) => state.save);
+
+  const basketData = useMemo(() => {
+    return {
+      summary: {
+        ...sampleSummaryData,
+        totalInvestedAmount: holdings.reduce(
+          (total, holding) => total + Number(holding.sipAmount),
+          0,
+        ),
+      },
+      orders: [...investmentOrders, ...holdings],
+    };
+  }, [investmentOrders, holdings]);
 
   return (
     <ThemedView type="background" style={styles.container}>
@@ -78,7 +119,9 @@ export default function DashboardScreen() {
               Total Balance
             </ThemedText>
             <ThemedView style={styles.balanceRow}>
-              <ThemedText style={styles.balance}>0</ThemedText>
+              <ThemedText style={styles.balance}>
+                {formatAmount(String(basketData.summary.totalInvestedAmount))}
+              </ThemedText>
               <ThemedText themeColor="textSecondary" style={styles.currency}>
                 INR
               </ThemedText>
@@ -96,7 +139,11 @@ export default function DashboardScreen() {
               value="₹0"
               valueColor={theme.faqTitle}
             />
-            <SummaryRow label="XIRR" value="0.0%" valueColor={theme.faqTitle} />
+            <SummaryRow
+              label="XIRR"
+              value={String(basketData.summary.xirr) || "0.0%"}
+              valueColor={theme.faqTitle}
+            />
           </ThemedView>
 
           <ThemedButton href="/wealth/sip" label="Invest more" />
@@ -137,9 +184,30 @@ export default function DashboardScreen() {
                 </ThemedText>
               </ThemedView>
               <ThemedView style={styles.divider} />
-              <SipEntry />
-              <ThemedView style={styles.divider} />
-              <SipEntry />
+              {basketData.orders.map((order, index) => {
+                return (
+                  <Pressable
+                    key={order.id}
+                    onPress={() => {
+                      if (
+                        order.status === "completed" ||
+                        order.status === "active" ||
+                        order.status === "amount_selected"
+                      ) {
+                        router.push({
+                          pathname: "/wealth/details/[invoiceId]",
+                          params: { invoiceId: order.id },
+                        });
+                      }
+                    }}
+                  >
+                    <SipEntry key={order.id} order={order} />
+                    {index < basketData.orders.length - 1 && (
+                      <ThemedView style={styles.divider} />
+                    )}
+                  </Pressable>
+                );
+              })}
             </ThemedView>
           </ThemedView>
 
