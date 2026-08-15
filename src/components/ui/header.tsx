@@ -30,22 +30,40 @@ const Header = ({
   const helpColor = theme.primaryInk;
 
   const openWhatsApp = async () => {
-    // The exact target WhatsApp API link
-    const url =
-      "https://api.whatsapp.com/send/?phone=919004311470&text=Hi%20BlinkMoney%20Support!%0AI%20need%20help&type=phone_number&app_absent=0";
+    // 1. Define target contact and message variables
+    const phoneNumber = "919004311470"; // Target number with country code
+    const message = "Hi BlinkMoney Support!\nI need help"; // Your custom text message
+
+    // 2. Define both the deep-link URL and your explicit web fallback URL
+    const nativeUrl = `whatsapp://send?text=${encodeURIComponent(message)}&phone=${phoneNumber}`;
+    const webFallbackUrl = `https://whatsapp.com{phoneNumber}&text=${encodeURIComponent(message)}&type=phone_number&app_absent=0`;
 
     try {
-      // 1. Verify if the device is capable of handling the URL schema
-      const supported = await Linking.canOpenURL(url);
+      // 3. Test if the native WhatsApp app protocol is supported on this device
+      const isNativeSupported = await Linking.canOpenURL(nativeUrl);
 
-      if (supported) {
-        // 2. Fire the deep-link redirection
-        await Linking.openURL(url);
+      if (isNativeSupported) {
+        // Launch directly inside the native app client
+        await Linking.openURL(nativeUrl);
       } else {
-        Alert.alert("Error", "WhatsApp is not installed on this device");
+        // 4. Fallback execution: Try to launch via the browser API link
+        const isWebSupported = await Linking.canOpenURL(webFallbackUrl);
+
+        if (isWebSupported) {
+          await Linking.openURL(webFallbackUrl);
+        } else {
+          Alert.alert(
+            "Error",
+            "Your device is unable to open web or app links.",
+          );
+        }
       }
     } catch (error) {
-      Alert.alert("Error", "An error occurred while trying to open WhatsApp");
+      Alert.alert(
+        "Error",
+        "An unexpected error occurred while trying to open WhatsApp.",
+      );
+      console.error(error);
     }
   };
 

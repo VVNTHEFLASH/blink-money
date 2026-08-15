@@ -779,6 +779,8 @@ const sip = () => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
+          {/* Fix Carousel then use it */}
+          {/* <SaveCarousel /> */}
           <ThemedView style={styles.tabContainer} type="surface">
             <Pressable
               style={{ flex: 1 }}
